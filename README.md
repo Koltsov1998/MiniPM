@@ -12,7 +12,7 @@ MiniPM - это Telegram-бот, который помогает вести ли
 ## Требования
 - Go 1.16 или выше
 - Telegram Bot Token (получить можно у [@BotFather](https://t.me/BotFather))
-- API ключ для языковой модели (например, OpenAI)
+- API ключ для OpenRouter (https://openrouter.ai) - сервиса доступа к языковым моделям
 - Установленный Obsidian и созданное хранилище (vault)
 
 ## Установка
@@ -31,7 +31,8 @@ go mod download
 3. Настройте конфигурацию (отредактируйте файл `config.yaml`):
 ```yaml
 telegram_token: "YOUR_TELEGRAM_BOT_TOKEN"
-llm_api_key: "YOUR_LLM_API_KEY"
+# API ключ для OpenRouter (https://openrouter.ai)
+llm_api_key: "YOUR_OPENROUTER_API_KEY"
 obsidian_vault_path: "/path/to/your/obsidian/vault"
 ```
 
@@ -53,7 +54,7 @@ go build
 Проект состоит из трех основных компонентов:
 
 1. **Telegram Bot** (`internal/telegram`) - обрабатывает взаимодействие с пользователем через Telegram API
-2. **LLM Client** (`internal/llm`) - взаимодействует с языковой моделью для обработки сообщений
+2. **LLM Client** (`internal/llm`) - взаимодействует с языковыми моделями через OpenRouter для обработки сообщений
 3. **Obsidian Integration** (`internal/obsidian`) - управляет созданием и редактированием Markdown-файлов в Obsidian vault
 
 ## Статус проекта
