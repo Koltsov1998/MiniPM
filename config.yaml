@@ -1,5 +1,0 @@
-# Конфигурация для Telegram-бота и LLM
-telegram_token: "YOUR_TELEGRAM_BOT_TOKEN"
-# API ключ для OpenRouter (https://openrouter.ai)
-llm_api_key: "YOUR_OPENROUTER_API_KEY"
-obsidian_vault_path: "/path/to/your/obsidian/vault"
