@@ -3,15 +3,28 @@ package main
 import (
 	"gopkg.in/yaml.v2"
 	"log"
+	"main/config"
 	"os"
 
 	"main/internal/telegram"
 )
 
+type MongoDBOptions struct {
+	MaxPoolSize      int `yaml:"max_pool_size"`
+	ConnectTimeoutMS int `yaml:"connect_timeout_ms"`
+}
+
+type MongoDBConfig struct {
+	URI      string         `yaml:"uri"`
+	Database string         `yaml:"database"`
+	Options  MongoDBOptions `yaml:"options"`
+}
+
 type Config struct {
-	TelegramToken     string `yaml:"telegram_token"`
-	LLMApiKey         string `yaml:"llm_api_key"`
-	ObsidianVaultPath string `yaml:"obsidian_vault_path"`
+	TelegramToken     string        `yaml:"telegram_token"`
+	LLMApiKey         string        `yaml:"llm_api_key"`
+	ObsidianVaultPath string        `yaml:"obsidian_vault_path"`
+	MongoDB           MongoDBConfig `yaml:"mongodb"`
 }
 
 func loadConfig(path string) (*Config, error) {
@@ -29,10 +42,33 @@ func loadConfig(path string) (*Config, error) {
 }
 
 func main() {
-	// Load configuration from config.yaml
-	cfg, err := loadConfig("config.yaml")
-	if err != nil {
-		log.Fatalf("Ошибка загрузки конфигурации: %v", err)
+	var cfg *Config
+
+	if _, err := os.Stat("config.local.yaml"); err == nil {
+
+		log.Println("Загрузка основной конфигурации из config.yaml")
+		baseCfg, err := loadConfig("config.yaml")
+		if err != nil {
+			log.Fatalf("Ошибка загрузки основной конфигурации: %v", err)
+		}
+		cfg = baseCfg
+	}
+
+	if _, err := os.Stat("config.local.yaml"); err == nil {
+		log.Println("Загрузка и объединение локальной конфигурации из config.local.yaml")
+		localCfg, err := loadConfig("config.local.yaml")
+		if err != nil {
+			log.Printf("Ошибка загрузки локальной конфигурации: %v, используем только основную конфигурацию", err)
+		} else {
+			err = config.MergeObjects(cfg, localCfg)
+			if err != nil {
+				log.Println("Конфигурации успешно объединены")
+			}
+		}
+	}
+
+	if cfg == nil {
+		log.Fatalf("Failed to load config.yaml and config.local.yaml. Please check your configuration and try again.")
 	}
 
 	bot, err := telegram.NewBot(cfg.TelegramToken, cfg.LLMApiKey, cfg.ObsidianVaultPath)

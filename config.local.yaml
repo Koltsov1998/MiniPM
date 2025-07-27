@@ -1,0 +1,6 @@
+mongodb:
+  uri: "mongodb://minipm:minipmpassword@localhost:27017"
+  database: "minipm"
+  options:
+    max_pool_size: 10
+    connect_timeout_ms: 5000
