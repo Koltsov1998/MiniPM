@@ -1,4 +1,4 @@
-module github.com/koltsov1998/MiniPM
+module github.com/Koltsov1998/MiniPM
 
 go 1.25
 
