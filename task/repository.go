@@ -1,7 +1,7 @@
 package task
 
 import (
-	"MiniPm/user"
+	"github.com/Koltsov1998/MiniPM/user"
 )
 
 type Task struct {

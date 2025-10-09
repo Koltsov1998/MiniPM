@@ -1,10 +1,10 @@
 package survey
 
 import (
-	"MiniPm/messenger"
-	"MiniPm/task"
-	"MiniPm/user"
 	"fmt"
+	"github.com/Koltsov1998/MiniPM/messenger"
+	"github.com/Koltsov1998/MiniPM/task"
+	"github.com/Koltsov1998/MiniPM/user"
 	"time"
 
 	"github.com/sirupsen/logrus"

@@ -1,7 +1,7 @@
 package messenger
 
 import (
-	"MiniPm/user"
+	"github.com/Koltsov1998/MiniPM/user"
 )
 
 type IMessengerProvider interface {

@@ -1,12 +1,13 @@
 package MiniPM
 
 import (
-	"MiniPm/messenger"
-	"MiniPm/survey"
-	"MiniPm/task"
-	"MiniPm/user"
 	"context"
 	"time"
+
+	"github.com/Koltsov1998/MiniPM/messenger"
+	"github.com/Koltsov1998/MiniPM/survey"
+	"github.com/Koltsov1998/MiniPM/task"
+	"github.com/Koltsov1998/MiniPM/user"
 
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
