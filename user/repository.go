@@ -11,7 +11,7 @@ type User struct {
 }
 
 type IUserRepository interface {
-	GetAll() ([]User, error)
-	GetById(id UserId) (User, error)
-	Create(User) (User, error)
+	GetAll() ([]*User, error)
+	GetById(id UserId) (*User, error)
+	Create(User) (*User, error)
 }
