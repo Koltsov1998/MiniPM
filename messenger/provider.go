@@ -5,6 +5,6 @@ import (
 )
 
 type IMessengerProvider interface {
-	SendMessage(userId user.UserId, message string) (chan string, error)
-	SendMessageWithoutResponse(userId user.UserId, message string) error
+	SendMessage(userId user.Id, message string) (chan string, error)
+	SendMessageWithoutResponse(userId user.Id, message string) error
 }

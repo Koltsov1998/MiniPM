@@ -29,7 +29,7 @@ func NewSurveyProcessor(
 	}
 }
 
-func (s *SurveyProcessor) DoSurveyForUser(userId user.UserId) error {
+func (s *SurveyProcessor) DoSurveyForUser(userId user.Id) error {
 	tasks, err := s.taskRepository.GetAllInProgressForUser(userId)
 	if err != nil {
 		return err

@@ -4,8 +4,8 @@ import (
 	"github.com/Koltsov1998/MiniPM/user"
 )
 
-type ITaskRepository interface {
-	GetAllInProgress(users []user.User) (map[user.UserId][]Task, error)
-	GetAllInProgressForUser(user user.User) ([]Task, error)
-	WriteTaskReport(user user.User, reportMessage string) error
+type ITaskRepository[U user.User, T Task] interface {
+	GetAllInProgress(users []U) (map[user.Id][]T, error)
+	GetAllInProgressForUser(user U) ([]T, error)
+	WriteTaskReport(user U, reportMessage string) error
 }
