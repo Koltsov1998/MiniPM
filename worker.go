@@ -21,7 +21,7 @@ type Worker[U user.User, T task.Task] struct {
 
 	// inner state
 	lastNotificationDay int
-	surveyProcessor     *survey.SurveyProcessor
+	surveyProcessor     *survey.SurveyProcessor[U, T]
 }
 
 func StartWorker[U user.User, T task.Task](
@@ -33,7 +33,7 @@ func StartWorker[U user.User, T task.Task](
 ) {
 	surveyProcessor := survey.NewSurveyProcessor(taskRepository, userRepository, messageProvider)
 
-	w := &Worker{
+	w := &Worker[U, T]{
 		userRepository:  userRepository,
 		taskRepository:  taskRepository,
 		surveyProcessor: surveyProcessor,
@@ -63,7 +63,7 @@ func StartWorker[U user.User, T task.Task](
 	}()
 }
 
-func (w *Worker) isNotificationTime(schedule cron.Schedule) bool {
+func (w *Worker[U, T]) isNotificationTime(schedule cron.Schedule) bool {
 	now := time.Now()
 
 	next := schedule.Next(now)
@@ -80,7 +80,7 @@ func (w *Worker) isNotificationTime(schedule cron.Schedule) bool {
 	return false
 }
 
-func (w *Worker) doSurvey() {
+func (w *Worker[U, T]) doSurvey() {
 	users, err := w.userRepository.GetAll()
 	if err != nil {
 		logrus.Errorf("Error getting users: %v", err)
