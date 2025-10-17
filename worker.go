@@ -13,21 +13,21 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Worker struct {
+type Worker[U user.User, T task.Task] struct {
 
 	// dependencies
-	userRepository user.IUserRepository[user.User]
-	taskRepository task.ITaskRepository[user.User, task.Task]
+	userRepository user.IUserRepository[U]
+	taskRepository task.ITaskRepository[U, T]
 
 	// inner state
 	lastNotificationDay int
 	surveyProcessor     *survey.SurveyProcessor
 }
 
-func StartWorker(
+func StartWorker[U user.User, T task.Task](
 	ctx context.Context,
-	userRepository user.IUserRepository[user.User],
-	taskRepository task.ITaskRepository[user.User, task.Task],
+	userRepository user.IUserRepository[U],
+	taskRepository task.ITaskRepository[U, T],
 	messageProvider messenger.IMessengerProvider,
 	cfg *Config,
 ) {

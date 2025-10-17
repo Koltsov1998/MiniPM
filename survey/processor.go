@@ -11,26 +11,26 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type SurveyProcessor struct {
+type SurveyProcessor[U user.User, T task.Task] struct {
 	// dependencies
-	taskRepository    task.ITaskRepository[user.User, task.Task]
-	userRepository    user.IUserRepository[user.User]
+	taskRepository    task.ITaskRepository[U, T]
+	userRepository    user.IUserRepository[U]
 	messengerProvider messenger.IMessengerProvider
 }
 
-func NewSurveyProcessor(
-	taskRepository task.ITaskRepository[user.User, task.Task],
-	userRepository user.IUserRepository[user.User],
+func NewSurveyProcessor[U user.User, T task.Task](
+	taskRepository task.ITaskRepository[U, T],
+	userRepository user.IUserRepository[U],
 	messengerProvider messenger.IMessengerProvider,
-) *SurveyProcessor {
-	return &SurveyProcessor{
+) *SurveyProcessor[U, T] {
+	return &SurveyProcessor[U, T]{
 		taskRepository:    taskRepository,
 		userRepository:    userRepository,
 		messengerProvider: messengerProvider,
 	}
 }
 
-func (s *SurveyProcessor) DoSurveyForUser(user user.User) error {
+func (s *SurveyProcessor[U, T]) DoSurveyForUser(user U) error {
 	tasks, err := s.taskRepository.GetAllInProgressForUser(user)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (s *SurveyProcessor) DoSurveyForUser(user user.User) error {
 			select {
 			case response := <-responseChan:
 				logrus.Infof("Got survey response from user: %s", response)
-				err = s.taskRepository.WriteTaskReport(user, response)
+				err = s.taskRepository.WriteTaskReport(t, user, response)
 				if err != nil {
 					logrus.Errorf("Error writing t report: %v", err)
 				}
@@ -67,6 +67,6 @@ func (s *SurveyProcessor) DoSurveyForUser(user user.User) error {
 	return nil
 }
 
-func (s *SurveyProcessor) formatSurveyMessage(task task.Task) string {
+func (s *SurveyProcessor[U, T]) formatSurveyMessage(task task.Task) string {
 	return fmt.Sprintf("How is your progress on task: %s?", task.GetTitle())
 }
