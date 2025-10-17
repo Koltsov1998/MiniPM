@@ -16,8 +16,8 @@ import (
 type Worker struct {
 
 	// dependencies
-	userRepository user.IUserRepository
-	taskRepository task.ITaskRepository
+	userRepository user.IUserRepository[user.User]
+	taskRepository task.ITaskRepository[user.User, task.Task]
 
 	// inner state
 	lastNotificationDay int
@@ -26,8 +26,8 @@ type Worker struct {
 
 func StartWorker(
 	ctx context.Context,
-	userRepository user.IUserRepository,
-	taskRepository task.ITaskRepository,
+	userRepository user.IUserRepository[user.User],
+	taskRepository task.ITaskRepository[user.User, task.Task],
 	messageProvider messenger.IMessengerProvider,
 	cfg *Config,
 ) {
@@ -88,7 +88,7 @@ func (w *Worker) doSurvey() {
 	}
 
 	for _, u := range users {
-		err := w.surveyProcessor.DoSurveyForUser(u.ID)
+		err := w.surveyProcessor.DoSurveyForUser(u)
 		if err != nil {
 			logrus.Errorf("Error surveying tasks: %v", err)
 		}
