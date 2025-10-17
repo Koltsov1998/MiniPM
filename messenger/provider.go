@@ -4,7 +4,7 @@ import (
 	"github.com/Koltsov1998/MiniPM/user"
 )
 
-type IMessengerProvider interface {
-	SendMessage(userId user.Id, message string) (chan string, error)
-	SendMessageWithoutResponse(userId user.Id, message string) error
+type IMessengerProvider[U user.User] interface {
+	SendMessage(user U, message string) (chan string, error)
+	SendMessageWithoutResponse(user U, message string) error
 }

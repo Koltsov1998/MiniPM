@@ -28,7 +28,7 @@ func StartWorker[U user.User, T task.Task](
 	ctx context.Context,
 	userRepository user.IUserRepository[U],
 	taskRepository task.ITaskRepository[U, T],
-	messageProvider messenger.IMessengerProvider,
+	messageProvider messenger.IMessengerProvider[U],
 	cfg *Config,
 ) {
 	surveyProcessor := survey.NewSurveyProcessor(taskRepository, userRepository, messageProvider)

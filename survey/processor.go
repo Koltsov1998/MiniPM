@@ -15,13 +15,13 @@ type SurveyProcessor[U user.User, T task.Task] struct {
 	// dependencies
 	taskRepository    task.ITaskRepository[U, T]
 	userRepository    user.IUserRepository[U]
-	messengerProvider messenger.IMessengerProvider
+	messengerProvider messenger.IMessengerProvider[U]
 }
 
 func NewSurveyProcessor[U user.User, T task.Task](
 	taskRepository task.ITaskRepository[U, T],
 	userRepository user.IUserRepository[U],
-	messengerProvider messenger.IMessengerProvider,
+	messengerProvider messenger.IMessengerProvider[U],
 ) *SurveyProcessor[U, T] {
 	return &SurveyProcessor[U, T]{
 		taskRepository:    taskRepository,
@@ -38,7 +38,7 @@ func (s *SurveyProcessor[U, T]) DoSurveyForUser(user U) error {
 	for _, t := range tasks {
 		go func() {
 			chatMessage := s.formatSurveyMessage(t)
-			responseChan, err := s.messengerProvider.SendMessage(user.GetId(), chatMessage)
+			responseChan, err := s.messengerProvider.SendMessage(user, chatMessage)
 			if err != nil {
 				logrus.Errorf("Error sending message: %v", err)
 				return
@@ -56,7 +56,7 @@ func (s *SurveyProcessor[U, T]) DoSurveyForUser(user U) error {
 				}
 			case <-tChan:
 				logrus.Warningf("Timeout waiting for response")
-				err := s.messengerProvider.SendMessageWithoutResponse(user.GetId(), "Sorry, I didn't get your response")
+				err := s.messengerProvider.SendMessageWithoutResponse(user, "Sorry, I didn't get your response")
 				if err != nil {
 					logrus.Errorf("Error sending message: %v", err)
 				}
