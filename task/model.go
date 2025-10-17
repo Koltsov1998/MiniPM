@@ -1,5 +1,5 @@
 package task
 
-type Task struct {
-	Title string
+type Task interface {
+	GetTitle() string
 }
