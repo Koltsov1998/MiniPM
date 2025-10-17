@@ -7,5 +7,5 @@ import (
 type ITaskRepository[U user.User, T Task] interface {
 	GetAllInProgress(users []U) (map[user.Id][]T, error)
 	GetAllInProgressForUser(user U) ([]T, error)
-	WriteTaskReport(user U, reportMessage string) error
+	WriteTaskReport(task Task, user U, reportMessage string) error
 }
